@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.athome.mapper.User">
+
+
+    <!--public List<UserBean> getAllUser();-->
+    <select id="getAllUser" resultType="UserBean">
+    select * from userInfo
+</select>
+    <!--    public UserBean getUserByNameAndPassword(String userName,String password);-->
+    <select id="getUserByNameAndPassword" resultType="UserBean">
+        select * from userInfo where name=#{0} and password=#{1}
+    </select>
+
+<!--    public UserBean getUserByName(String userName);-->
+
+    <select id="getUserByName" resultType="UserBean">
+        select * from userInfo where name=#{userName}
+    </select>
+
+<!--    public void insertUser(UserBean userBean);-->
+    <insert id="insertUser">
+        insert  into userInfo(name,password,email) values(#{name},#{password},#{email})
+    </insert>
+</mapper>

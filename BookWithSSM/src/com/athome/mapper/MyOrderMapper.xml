@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.athome.mapper.MyOrderMapper">
+
+    <!--     public List<MyOrder> getAllMyOrder();-->
+
+
+    <resultMap id="allOredr" type="MyOrder">
+        <result column="dateTime" property="dateTime"></result>
+        <result column="orderNumber" property="orderNumber"></result>
+        <result column="userName" property="userName"></result>
+        <collection property="cartItemList" ofType="Cart">
+            <result column="bookId" property="bookId"></result>
+            <result column="bookName" property="bookName"></result>
+            <result column="totalPrice" property="totalPrice"></result>
+            <result column="count" property="count"></result>
+        </collection>
+    </resultMap>
+    <select id="getAllMyOrder" resultMap="allOredr">
+        select  * from MyOrder
+    </select>
+
+
+<!--    public List<MyOrder> getAllMyOrderByName(String name);-->
+    <select id="getAllMyOrderByName" resultMap="allOredr">
+        select  * from MyOrder where userName=#{name}
+    </select>
+
+    <!--    public void InsertMyorder(MyOrder myOrder);-->
+    <insert id="InsertMyorder">
+
+        insert into MyOrder(orderNumber,userName,bookId,bookName,totalPrice,count,dateTime) values
+        (#{orderNumber},#{userName},
+        <foreach collection="cartItemList" item="cart" index="index" separator=",">
+
+            #{cart.bookId},#{cart.bookName},#{cart.totalPrice},#{cart.count},
+        </foreach>
+        #{dateTime}
+        )
+
+
+    </insert>
+
+</mapper>

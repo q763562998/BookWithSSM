@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.athome.mapper.CartItemMapper">
+
+
+<!--public void insertCartItem(Cart cart);-->
+<insert id="insertCartItem" >
+    insert into cartItem(userName,orderNumber,bookId,unitPrice,count,totalPrice,bookName)
+    values (#{userName},#{id},#{bookId},#{unitPrice},#{count},#{totalPrice},#{bookName})
+</insert>
+
+<!--    public void updateCartItem(Cart cart);-->
+
+    <update id="updateCartItem">
+        update cartItem set orderNumber=#{id},totalPrice=#{totalPrice},count=#{count} where bookId=#{bookId}
+    </update>
+
+<!--    public List<Cart> getAllCartByName(String name);-->
+
+
+    <resultMap id="CartItemTable" type="Cart">
+        <result  column="orderNumber" property="id"></result>
+        <result column="userName" property="userName"></result>
+        <result column="bookId" property="bookId"></result>
+        <result column="unitPrice" property="unitPrice"></result>
+        <result column="count" property="count"></result>
+        <result column="totalPrice" property="totalPrice"></result>
+        <result column="bookName" property="bookName"></result>
+
+    </resultMap>
+    <select id="getAllCartByName" resultMap="CartItemTable">
+        select * from cartItem where userName=#{name}
+    </select>
+
+<!--public void deleteCartItem(String orderNumber);-->
+    <delete id="deleteCartItem">
+        delete from cartItem where orderNumber=#{orderNumber}
+    </delete>
+
+<!--    public void deleteAllCartItem();-->
+    <delete id="deleteAllCartItem">
+        delete from cartItem
+    </delete>
+
+<!--    public List<Cart> getAllCart();-->
+
+    <select id="getAllCart" resultMap="CartItemTable">
+        select * from cartItem
+    </select>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+<context:component-scan base-package="com.athome">
+
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+
+</context:component-scan>
+    <!--连接阿里的数据库-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+
+    <bean id="DruidDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+    </bean>
+
+    <!--    声明事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="DruidDataSource"></property>
+
+    </bean>
+
+    <!--    开启事务注解驱动 这里注意要让上下两个id名字一样transactionManager -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+    <!--   管理Mybatis 操作数据库的sqlSession对象 -->
+
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--        给Mybatis的sqlSession设置数据源-->
+        <property name="dataSource" ref="DruidDataSource"></property>
+        <!--        设置Mybatis核心配置文件的路径-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+
+        <!--        设置别名 bean 下的别名都默认为了类名（不分大小写）-->
+        <property name="typeAliasesPackage" value="com.athome.pojo"></property>
+        <!--        设置映射文件的路径-->
+        <property name="mapperLocations" value="classpath:com/athome/mapper/*.xml"></property>
+    </bean>
+
+
+
+
+    <!--    给包Mapper的所有接口创建实例化对象（动态代理实现类），用于注解获得对象-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.athome.mapper"></property>
+
+    </bean>
+</beans>
